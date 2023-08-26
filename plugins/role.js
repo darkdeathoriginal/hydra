@@ -2,7 +2,7 @@ const {Module,onButton} = require("../index")
 const { ActionRowBuilder, ButtonBuilder, ButtonStyle,EmbedBuilder } = require('discord.js');
 const { ApplicationCommandOptionType } = require('discord.js');
 
-const roles = []
+const roles = {}
 
 Module({
     name:"add-role",
@@ -24,10 +24,10 @@ Module({
     
 },async(m)=>{
     if (m.member.permissions.has("MANAGE_ROLES")){
+        roles[m.guildId] = []
         const role = m.options.getRole("role")
         const emoji = m.options.getString("emoji")
-        roles.push({role,emoji})
-        console.log(roles);
+        roles[m.guildId].push({role,emoji})
         let e1 = new EmbedBuilder()
             .setColor(role.color)
             .setDescription(`role added.`)
@@ -43,12 +43,12 @@ Module({
     description:"sends role message"
 },async m=>{
     if (m.member.permissions.has("MANAGE_ROLES")){
-        if(roles.length == 0){
+        if(roles[m.guildId].length == 0){
             return m.reply("no roles have been added. Use /add-role to add roles")
         }
         let row = new ActionRowBuilder()
                 .addComponents(
-                    roles.map(e=>{
+                    roles[m.guildId].map(e=>{
                         return new ButtonBuilder()
                         .setLabel(`${e.role.name}`)
                         .setStyle(ButtonStyle.Primary)
@@ -56,7 +56,7 @@ Module({
                         .setEmoji(e.emoji)
                     })
                 )
-        roles.length = 0
+        roles[m.guildId].length = 0
         return await m.reply({ content:"Press the buttons to give yourself a role", components: [row] })
     }
     else{
