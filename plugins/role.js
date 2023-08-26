@@ -1,4 +1,4 @@
-const {Module,addButton} = require("../index")
+const {Module,onButton} = require("../index")
 const { ActionRowBuilder, ButtonBuilder, ButtonStyle,EmbedBuilder } = require('discord.js');
 const { ApplicationCommandOptionType } = require('discord.js');
 
@@ -64,7 +64,7 @@ Module({
     }
 })
 
-addButton({
+onButton({
     name:"role"
 },async (m)=>{
     try{

@@ -12,7 +12,7 @@ function Module(object,callback){
     object.callback = callback
     commands.push(object)
 }
-function addButton(object,callback){
+function onButton(object,callback){
     object.callback = callback
     buttons.push(object)
 }
@@ -71,6 +71,6 @@ async function connect(){
 }
 module.exports = {
     Module,
-    addButton
+    onButton
 }
 connect()
