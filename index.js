@@ -7,9 +7,14 @@ const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 const rest = new REST({ version: '10' }).setToken(TOKEN);
 
 const commands = [];
+const buttons = []
 function Module(object,callback){
     object.callback = callback
     commands.push(object)
+}
+function addButton(object,callback){
+    object.callback = callback
+    buttons.push(object)
 }
 async function connect(){
 
@@ -37,18 +42,35 @@ async function connect(){
     });
 
     client.on('interactionCreate', async interaction => {
-    if (!interaction.isChatInputCommand()) return;
+    try{
 
-    for(let i of commands){
-        if(i.name == interaction.commandName){
-            i.callback(interaction)
+        if(interaction.isChatInputCommand()){
+            for(let i of commands){
+                if(i.name == interaction.commandName){
+                    i.callback(interaction)
+                }
+            }
         }
+        else if(interaction.isButton()){
+            for(let i of buttons){
+                if(interaction.customId?.startsWith(i.name)){
+                    i.callback(interaction)
+                }
+            }
+        }
+        else{
+            return ;
+        }
+    }
+    catch(e){
+        console.log(e);
     }
     });
 
     client.login(TOKEN);
 }
 module.exports = {
-    Module
+    Module,
+    addButton
 }
 connect()
