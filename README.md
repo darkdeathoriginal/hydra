@@ -31,5 +31,5 @@ use /set-role to get the role message
 
 ## Demo
 
-You can try this bot [here](roles[m.guildId]) .
+You can try this bot [here](https://discord.com/api/oauth2/authorize?client_id=750389157976866826&permissions=268454912&scope=bot) .
 
