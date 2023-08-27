@@ -7,7 +7,9 @@ const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 const rest = new REST({ version: '10' }).setToken(TOKEN);
 
 const commands = [];
-const buttons = []
+const buttons = [];
+const readyList = []
+
 function Module(object,callback){
     object.callback = callback
     commands.push(object)
@@ -15,6 +17,10 @@ function Module(object,callback){
 function onButton(object,callback){
     object.callback = callback
     buttons.push(object)
+}
+function onReady(object,callback){
+    object.callback = callback
+    readyList.push(object)
 }
 async function connect(){
 
@@ -39,6 +45,10 @@ async function connect(){
   
     client.on('ready', () => {
         console.log(`Logged in as ${client.user.tag}!`);
+        for(let i of readyList){
+            i.callback(client)
+        }
+
     });
 
     client.on('interactionCreate', async interaction => {
@@ -71,6 +81,7 @@ async function connect(){
 }
 module.exports = {
     Module,
-    onButton
+    onButton,
+    onReady
 }
 connect()
