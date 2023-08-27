@@ -6,17 +6,17 @@ const fs = require("fs");
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 const rest = new REST({ version: '10' }).setToken(TOKEN);
 
-const commands = [];
-const buttons = [];
+const commands = {};
+const buttons = {};
 const readyList = []
 
 function Module(object,callback){
     object.callback = callback
-    commands.push(object)
+    commands[object.name] = object
 }
 function onButton(object,callback){
     object.callback = callback
-    buttons.push(object)
+    buttons[object.name] = object
 }
 function onReady(object,callback){
     object.callback = callback
@@ -36,7 +36,7 @@ async function connect(){
 
     try {
         console.log('Started refreshing application (/) commands.');
-        await rest.put(Routes.applicationCommands(CLIENT_ID), { body: commands });
+        await rest.put(Routes.applicationCommands(CLIENT_ID), { body: Object.values(commands) });
         console.log('Successfully reloaded application (/) commands.');
     } catch (error) {
         console.error(error);
@@ -55,17 +55,16 @@ async function connect(){
     try{
 
         if(interaction.isChatInputCommand()){
-            for(let i of commands){
-                if(i.name == interaction.commandName){
-                    i.callback(interaction)
-                }
+            let command = commands[interaction.commandName]
+            if(command){
+                command.callback(interaction)
             }
         }
         else if(interaction.isButton()){
-            for(let i of buttons){
-                if(interaction.customId?.startsWith(i.name)){
-                    i.callback(interaction)
-                }
+            let id = interaction.customId.split("-")[0]
+            let button = buttons[id]
+            if(button){
+                button.callback(interaction)
             }
         }
         else{

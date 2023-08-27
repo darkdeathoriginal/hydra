@@ -15,6 +15,7 @@ const cheerio = require('cheerio')
 Module({
     name:"ytnotif",
     description:"Adds youtube new video notification",
+    dmPermission:false,
     options: [
         {
           name: 'link',
@@ -28,12 +29,11 @@ Module({
           type: ApplicationCommandOptionType.Channel,
           required: true,
         },
-      ],
+      ]
 },async(m)=>{
     if(!m.guildId) return await m.reply("this is a guild command")
     await YtDb.sync()
     await deleteYt("747793211409301594")
-    console.log(await YtDb.findAll());
     await m.deferReply();
     const link = m.options.getString("link")
     const channelId = m.options.getChannel("id")
@@ -65,7 +65,6 @@ Module({
     if(!data ||data.data.channels == 0){
         return await m.editReply("No channel found")
     }
-    console.log(data.data);
     let row = new ActionRowBuilder()
                 .addComponents(
                     data.data.channels.map((e)=>{
