@@ -1,6 +1,5 @@
 const {Module,onButton} = require("../index")
-const { ActionRowBuilder, ButtonBuilder, ButtonStyle,EmbedBuilder } = require('discord.js');
-const { ApplicationCommandOptionType } = require('discord.js');
+const { ActionRowBuilder, ButtonBuilder, ButtonStyle,EmbedBuilder ,ApplicationCommandOptionType} = require('discord.js');
 
 const roles = {}
 
