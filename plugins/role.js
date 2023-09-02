@@ -39,7 +39,8 @@ Module({
 
 Module({
     name:"set-role",
-    description:"sends role message"
+    description:"sends role message",
+    dm_permission:false
 },async m=>{
     if (m.member.permissions.has("MANAGE_ROLES")){
         if(roles[m.guildId].length == 0){

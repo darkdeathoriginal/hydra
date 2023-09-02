@@ -15,7 +15,6 @@ const cheerio = require('cheerio')
 Module({
     name:"ytnotif",
     description:"Adds youtube new video notification",
-    dmPermission:false,
     options: [
         {
           name: 'link',
