@@ -43,7 +43,7 @@ Module(
       .setMaxValues(1)
       .addOptions(
         article.map((e) =>
-          new StringSelectMenuOptionBuilder().setLabel(e.title).setValue(e.lin)
+          new StringSelectMenuOptionBuilder().setLabel(e.title.slice(0,100)).setValue(e.lin)
         )
       );
     const actionRow = new ActionRowBuilder().addComponents(selectMenu);
