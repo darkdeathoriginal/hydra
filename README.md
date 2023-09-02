@@ -1,7 +1,7 @@
 
-# Discord auto-role  bot
+# Multi-purpose Discord bot
 
-This bot lets you setup roles so that users can get roles by themselves easily.
+This is a multi-puropose discord bot with features such as auto-role,YouTube notification and manga downloader.
 
 ## Environment Variables
 
@@ -31,5 +31,4 @@ use /set-role to get the role message
 
 ## Demo
 
-You can try this bot [here](https://discord.com/api/oauth2/authorize?client_id=750389157976866826&permissions=268454912&scope=bot) .
-
+You can try this bot [here](https://discord.com/api/oauth2/authorize?client_id=750389157976866826&permissions=268454912&scope=bot).
