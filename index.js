@@ -9,6 +9,7 @@ const rest = new REST({ version: '10' }).setToken(TOKEN);
 const commands = {};
 const buttons = {};
 const readyList = []
+const selectList = {}
 
 function Module(object,callback){
     object.callback = callback
@@ -21,6 +22,10 @@ function onButton(object,callback){
 function onReady(object,callback){
     object.callback = callback
     readyList.push(object)
+}
+function onSelect(object,callback){
+    object.callback = callback
+    selectList[object.name] = object
 }
 async function connect(){
 
@@ -67,6 +72,14 @@ async function connect(){
                 button.callback(interaction)
             }
         }
+        else if(interaction.isAnySelectMenu()){
+            let id = interaction.customId.split("-")[0]
+            let select = selectList[id]
+            if(select){
+                select.callback(interaction)
+            }
+
+        }
         else{
             return ;
         }
@@ -81,6 +94,7 @@ async function connect(){
 module.exports = {
     Module,
     onButton,
-    onReady
+    onReady,
+    onSelect
 }
 connect()
