@@ -32,7 +32,6 @@ Module({
 },async(m)=>{
     if(!m.guildId) return await m.reply("this is a guild command")
     await YtDb.sync()
-    await deleteYt("747793211409301594")
     await m.deferReply();
     const link = m.options.getString("link")
     const channelId = m.options.getChannel("id")
@@ -51,7 +50,7 @@ Module({
     let obj = await getId(link)
     obj.channel = channelId
     data.data.channels.push(obj)
-    await updateYt(guild,data)
+    await updateYt(guild,data.data)
     return await m.editReply("Channel added..")
 })
 Module({

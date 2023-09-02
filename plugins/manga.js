@@ -11,7 +11,6 @@ const {
 } = require("discord.js");
 
 const MORE = {};
-const REPLIES = {};
 
 Module(
   {
@@ -93,7 +92,6 @@ Module(
         components: row,
         ephemeral: true,
       });
-      REPLIES[m.user.id] = reply;
     });
   }
 );
@@ -123,7 +121,6 @@ onButton(
     name: "manganext",
   },
   async (m) => {
-    await m.deferUpdate();
     let id = m.customId;
     const user = m.user.id;
     const chapters = MORE[user];
@@ -164,7 +161,7 @@ onButton(
       }
     }
 
-    await reply.edit({
+    await m.update({
       components: row,
       ephemeral: true,
     });
