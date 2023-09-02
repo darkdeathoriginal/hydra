@@ -1,7 +1,7 @@
 
 # Multi-purpose Discord bot
 
-This is a multi-puropose discord bot with features such as auto-role,YouTube notification and manga downloader.
+This is a multi-puropose discord bot with features such as auto-role,YouTube notification,suggestion and manga downloader.
 
 ## Environment Variables
 
