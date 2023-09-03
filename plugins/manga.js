@@ -124,7 +124,6 @@ onButton(
     let id = m.customId;
     const user = m.user.id;
     const chapters = MORE[user];
-    const reply = REPLIES[user];
     const n = Number(id.split("-")[1]);
     const array = chapters.slice(n * 25, chapters.length - 1);
     let newArray;
