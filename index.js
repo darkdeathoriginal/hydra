@@ -10,6 +10,7 @@ const commands = {};
 const buttons = {};
 const readyList = []
 const selectList = {}
+const contextMenus = {}
 
 function Module(object,callback){
     object.callback = callback
@@ -27,6 +28,10 @@ function onSelect(object,callback){
     object.callback = callback
     selectList[object.name] = object
 }
+function onCMenu(object,callback){
+    object.callback = callback
+    contextMenus[object.name] = object
+}
 async function connect(){
 
     const pluginFolder = "./plugins/";
@@ -41,7 +46,7 @@ async function connect(){
 
     try {
         console.log('Started refreshing application (/) commands.');
-        await rest.put(Routes.applicationCommands(CLIENT_ID), { body: Object.values(commands) });
+        await rest.put(Routes.applicationCommands(CLIENT_ID), { body: [...Object.values(commands),...Object.values(contextMenus)] });
         console.log('Successfully reloaded application (/) commands.');
     } catch (error) {
         console.error(error);
@@ -80,6 +85,13 @@ async function connect(){
             }
 
         }
+        else if(interaction.isUserContextMenuCommand()){
+            let command = contextMenus[interaction.commandName]
+            if(command){
+                command.callback(interaction)
+            }
+
+        }
         else{
             return ;
         }
@@ -95,6 +107,7 @@ module.exports = {
     Module,
     onButton,
     onReady,
-    onSelect
+    onSelect,
+    onCMenu
 }
 connect()
