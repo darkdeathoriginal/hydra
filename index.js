@@ -1,6 +1,6 @@
 const { Client, GatewayIntentBits,REST, Routes } = require('discord.js');
 require('dotenv').config();
-const {CLIENT_ID,TOKEN} = require("./config")
+const {CLIENT_ID,TOKEN,SUDO} = require("./config")
 const fs = require("fs");
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
@@ -67,7 +67,12 @@ async function connect(){
         if(interaction.isChatInputCommand()){
             let command = commands[interaction.commandName]
             if(command){
-                command.callback(interaction)
+                if(!command.owner || SUDO.includes(interaction.user.id)){
+                    command.callback(interaction)
+                }
+                else{
+                    await interaction.reply("This is an owner command")
+                }
             }
         }
         else if(interaction.isButton()){

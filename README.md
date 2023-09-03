@@ -11,6 +11,7 @@ Bot `TOKEN`
 
 `CLIENT_ID`
 
+`SUDO` (bot owner id)
 
 ## Installation
 
