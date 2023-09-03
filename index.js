@@ -53,8 +53,12 @@ async function connect(){
     }
   
   
-    client.on('ready', () => {
+    client.on('ready',async () => {
         console.log(`Logged in as ${client.user.tag}!`);
+        if(SUDO.length!=0){
+            let user = await client.users.fetch(SUDO[0])
+            user.send("Bot started..")
+        }
         for(let i of readyList){
             i.callback(client)
         }
