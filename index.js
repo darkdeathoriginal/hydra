@@ -1,9 +1,9 @@
-const { Client, GatewayIntentBits,REST, Routes } = require('discord.js');
+const { Client, GatewayIntentBits,REST, Routes, Events } = require('discord.js');
 require('dotenv').config();
 const {CLIENT_ID,TOKEN,SUDO} = require("./config")
 const fs = require("fs");
 
-const client = new Client({ intents: [GatewayIntentBits.Guilds] });
+const client = new Client({ intents: [GatewayIntentBits.Guilds,GatewayIntentBits.GuildMembers] });
 const rest = new REST({ version: '10' }).setToken(TOKEN);
 
 const commands = {};
@@ -11,6 +11,7 @@ const buttons = {};
 const readyList = []
 const selectList = {}
 const contextMenus = {}
+const joinList = []
 
 function Module(object,callback){
     object.callback = callback
@@ -31,6 +32,10 @@ function onSelect(object,callback){
 function onCMenu(object,callback){
     object.callback = callback
     contextMenus[object.name] = object
+}
+function onJoin(object,callback){
+    object.callback = callback
+    joinList.push(object)
 }
 async function connect(){
 
@@ -109,6 +114,12 @@ async function connect(){
         console.log(e);
     }
     });
+    client.on(Events.GuildMemberAdd, (member) => {
+        for(let i of joinList){
+            i.callback(member)
+        }
+    });
+      
 
     client.login(TOKEN);
 }
@@ -117,6 +128,7 @@ module.exports = {
     onButton,
     onReady,
     onSelect,
-    onCMenu
+    onCMenu,
+    onJoin
 }
 connect()
