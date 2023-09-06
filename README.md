@@ -25,9 +25,9 @@ Run ```npm start``` to start the bot/
     
 ## Documentation
 
-use /add-role for adding role
+use /role-generator add for adding role
 
-use /set-role to get the role message
+use /role-generator generate to get the role message
 
 
 ## Demo
