@@ -11,6 +11,7 @@ const {
   ModalBuilder,
   TextInputBuilder,
   TextInputStyle,
+  PermissionFlagsBits,
 } = require("discord.js");
 
 Module(
@@ -48,6 +49,7 @@ Module(
         ],
       },
     ],
+    default_member_permissions:PermissionFlagsBits.Administrator.toString()
   },
 
   async (m) => {
