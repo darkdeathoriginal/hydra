@@ -3,7 +3,7 @@ require('dotenv').config();
 const {CLIENT_ID,TOKEN,SUDO} = require("./config")
 const fs = require("fs");
 
-const client = new Client({ intents: [GatewayIntentBits.Guilds,GatewayIntentBits.GuildMembers] });
+const client = new Client({ intents: [] });
 const rest = new REST({ version: '10' }).setToken(TOKEN);
 
 const commands = {};
