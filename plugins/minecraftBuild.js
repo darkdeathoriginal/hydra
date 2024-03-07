@@ -142,7 +142,7 @@ Module(
     }
 
     buildMessage.edit({
-      content: `${m.user} build created`,
+      content: `${m.user} Build created`,
       embeds: [buildEmbed],
       components: rows,
     });
@@ -179,7 +179,7 @@ onButton(
         buildEmbed.fields[fieldLength>3?3:2].value = `${progress.toFixed(0)}%`;
         if (progress == 100) {
           buildEmbed.data.color = 0x84e660;
-          buildEmbed.fields[fieldLength>2?2:1].value = "Completed";
+          buildEmbed.fields[fieldLength>3?2:1].value = "Completed";
           build.status = "completed";
           await build.save();
         }
@@ -225,7 +225,7 @@ onButton(
         buildEmbed.fields[fieldLength>3?3:2].value = `${progress.toFixed(0)}%`;
         if (progress != 100) {
           buildEmbed.data.color = 0xffd700;
-          buildEmbed.fields[fieldLength>2?2:1].value = "Pending";
+          buildEmbed.fields[fieldLength>3?2:1].value = "Pending";
           build.status = "pending";
           await build.save();
         }
