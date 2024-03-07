@@ -25,16 +25,16 @@ Module(
         required: true,
       },
       {
-        name:"url",
-        description:"video url",
-        type:ApplicationCommandOptionType.String,
-        required:false
-      }
+        name: "url",
+        description: "video url",
+        type: ApplicationCommandOptionType.String,
+        required: false,
+      },
     ],
   },
   async (m) => {
     const name = m.options.getString("name");
-    const url = m.options.getString("url")||"";
+    const url = m.options.getString("url") || "";
     const channelId = m.channel.id;
     const modal = new ModalBuilder()
       .setTitle("Create build request")
@@ -88,19 +88,20 @@ Module(
           value: name,
         },
       ])
-      .setColor("Yellow")
+      .setColor("Yellow");
     try {
-      if(url){
-        buildEmbed.setURL(url)
-        .addFields([
+      if (url) {
+        buildEmbed.setURL(url).addFields([
           {
             name: "Video",
             value: `[click here](${url})`,
-          }
-        ])
-      } 
+          },
+        ]);
+      }
     } catch (error) {
-      return await buildMessage.edit({content:"failed to create build request\nInvalid url"});
+      return await buildMessage.edit({
+        content: "failed to create build request\nInvalid url",
+      });
     }
     buildEmbed.addFields([
       {
@@ -113,7 +114,13 @@ Module(
       },
     ]);
     const btnArray = [];
-    for (let item of buildText.split(",")) {
+    const items = buildText.split(",");
+    if (items.length > 25) {
+      return await buildMessage.edit({
+        content: "failed to create build request\nToo many items",
+      });
+    }
+    for (let item of items) {
       if (!item.trim()) continue;
       const newItem = await buildItemsDb.create({
         buildId: newBuild.id,
@@ -124,13 +131,20 @@ Module(
         .setLabel(item)
         .setStyle(ButtonStyle.Secondary)
         .setCustomId(`build-${newItem.id}`);
-      const row = new ActionRowBuilder().addComponents(Btn);
-      btnArray.push(row);
+      btnArray.push(Btn);
     }
+    const rows = [];
+    for (let i = 0; i < btnArray.length; i += 5) {
+      const row = new ActionRowBuilder().addComponents(
+        btnArray.slice(i, i + 5)
+      );
+      rows.push(row);
+    }
+
     buildMessage.edit({
       content: `${m.user} suggestion created`,
       embeds: [buildEmbed],
-      components: btnArray,
+      components: rows,
     });
   }
 );
@@ -160,10 +174,11 @@ onButton(
         const progress = (completedItems.length / buildItems.length) * 100;
         const buildMessage = await m.channel.messages.fetch(build.message);
         const buildEmbed = buildMessage.embeds[0];
-        buildEmbed.fields[3].value = `${progress.toFixed(0)}%`;
+        const fieldLength = buildEmbed.fields.length;
+        buildEmbed.fields[fieldLength>3?3:2].value = `${progress.toFixed(0)}%`;
         if (progress == 100) {
           buildEmbed.data.color = 0x84e660;
-          buildEmbed.fields[2].value = "Completed";
+          buildEmbed.fields[fieldLength>2?2:1].value = "Completed";
           build.status = "completed";
           await build.save();
         }
@@ -178,13 +193,18 @@ onButton(
                 : ButtonStyle.Secondary
             )
             .setCustomId(`build-${item.id}`);
-          const row = new ActionRowBuilder().addComponents(Btn);
-          button.push(row);
+          button.push(Btn);
         }
-        const row = new ActionRowBuilder().addComponents(button);
+        const rows = [];
+        for (let i = 0; i < button.length; i += 5) {
+          const row = new ActionRowBuilder().addComponents(
+            button.slice(i, i + 5)
+          );
+          rows.push(row);
+        }
         buildMessage.edit({
           embeds: [buildEmbed],
-          components: button,
+          components: rows,
         });
         return await m.editReply("item completed");
       }
@@ -200,10 +220,11 @@ onButton(
         const progress = (completedItems.length / buildItems.length) * 100;
         const buildMessage = await m.channel.messages.fetch(build.message);
         const buildEmbed = buildMessage.embeds[0];
-        buildEmbed.fields[3].value = `${progress.toFixed(0)}%`;
+        const fieldLength = buildEmbed.fields.length;
+        buildEmbed.fields[fieldLength>3?3:2].value = `${progress.toFixed(0)}%`;
         if (progress != 100) {
           buildEmbed.data.color = 0xffd700;
-          buildEmbed.fields[2].value = "Pending";
+          buildEmbed.fields[fieldLength>2?2:1].value = "Pending";
           build.status = "pending";
           await build.save();
         }
@@ -218,13 +239,18 @@ onButton(
                 : ButtonStyle.Secondary
             )
             .setCustomId(`build-${item.id}`);
-          const row = new ActionRowBuilder().addComponents(Btn);
-          button.push(row);
+          button.push(Btn);
         }
-        const row = new ActionRowBuilder().addComponents(button);
+        const rows = [];
+        for (let i = 0; i < button.length; i += 5) {
+          const row = new ActionRowBuilder().addComponents(
+            button.slice(i, i + 5)
+          );
+          rows.push(row);
+        }
         buildMessage.edit({
           embeds: [buildEmbed],
-          components: button,
+          components: rows,
         });
         return await m.editReply("item uncompleted");
       }
