@@ -146,6 +146,7 @@ Module(
       embeds: [buildEmbed],
       components: rows,
     });
+    await modalInteraction.editReply("build was created");
   }
 );
 onButton(
