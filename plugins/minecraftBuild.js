@@ -206,7 +206,6 @@ onButton(
           embeds: [buildEmbed],
           components: rows,
         });
-        return await m.editReply("item completed");
       }
       if (item.status == "completed") {
         item.status = "pending";
@@ -252,7 +251,6 @@ onButton(
           embeds: [buildEmbed],
           components: rows,
         });
-        return await m.editReply("item uncompleted");
       }
     } catch (e) {
       console.log(e);
