@@ -291,7 +291,6 @@ onButton(
         });
       }
       if (action == "downvote") {
-        console.log(targetsuggestion);
         const hasVotes =
           targetsuggestion.upvotes.includes(m.user.id) ||
           targetsuggestion.downvotes.includes(m.user.id);
