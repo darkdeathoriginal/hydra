@@ -84,7 +84,7 @@ Module(
       })
       .addFields([
         {
-          name: "Buid",
+          name: "Build",
           value: name,
         },
       ])
