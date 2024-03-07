@@ -4,12 +4,10 @@ const {
   ButtonBuilder,
   ButtonStyle,
   EmbedBuilder,
-  ChannelType,
   ApplicationCommandOptionType,
   ModalBuilder,
   TextInputBuilder,
   TextInputStyle,
-  PermissionFlagsBits,
 } = require("discord.js");
 const { buildDb, buildItemsDb } = require("./sql/build");
 
@@ -166,95 +164,59 @@ onButton(
       if (item.status == "pending") {
         item.status = "completed";
         await item.save();
-        const buildItems = await buildItemsDb.findAll({
-          where: { buildId: build.id },
-        });
-        const completedItems = buildItems.filter(
-          (i) => i.status == "completed"
-        );
-        const progress = (completedItems.length / buildItems.length) * 100;
-        const buildMessage = await m.channel.messages.fetch(build.message);
-        const buildEmbed = buildMessage.embeds[0];
-        const fieldLength = buildEmbed.fields.length;
-        buildEmbed.fields[fieldLength>3?3:2].value = `${progress.toFixed(0)}%`;
-        if (progress == 100) {
-          buildEmbed.data.color = 0x84e660;
-          buildEmbed.fields[fieldLength>3?2:1].value = "Completed";
-          build.status = "completed";
-          await build.save();
-        }
-        const button = [];
-        for (let item of buildItems) {
-          const Btn = new ButtonBuilder()
-            .setEmoji(item.status == "completed" ? "✅" : "⬜")
-            .setLabel(item.item)
-            .setStyle(
-              item.status == "completed"
-                ? ButtonStyle.Success
-                : ButtonStyle.Secondary
-            )
-            .setCustomId(`build-${item.id}`);
-          button.push(Btn);
-        }
-        const rows = [];
-        for (let i = 0; i < button.length; i += 5) {
-          const row = new ActionRowBuilder().addComponents(
-            button.slice(i, i + 5)
-          );
-          rows.push(row);
-        }
-        buildMessage.edit({
-          embeds: [buildEmbed],
-          components: rows,
-        });
-        return await m.deleteReply();
       }
-      if (item.status == "completed") {
+      else{
         item.status = "pending";
         await item.save();
-        const buildItems = await buildItemsDb.findAll({
-          where: { buildId: build.id },
-        });
-        const completedItems = buildItems.filter(
-          (i) => i.status == "completed"
-        );
-        const progress = (completedItems.length / buildItems.length) * 100;
-        const buildMessage = await m.channel.messages.fetch(build.message);
-        const buildEmbed = buildMessage.embeds[0];
-        const fieldLength = buildEmbed.fields.length;
-        buildEmbed.fields[fieldLength>3?3:2].value = `${progress.toFixed(0)}%`;
-        if (progress != 100) {
-          buildEmbed.data.color = 0xffd700;
-          buildEmbed.fields[fieldLength>3?2:1].value = "Pending";
-          build.status = "pending";
-          await build.save();
-        }
-        const button = [];
-        for (let item of buildItems) {
-          const Btn = new ButtonBuilder()
-            .setEmoji(item.status == "completed" ? "✅" : "⬜")
-            .setLabel(item.item)
-            .setStyle(
-              item.status == "completed"
-                ? ButtonStyle.Success
-                : ButtonStyle.Secondary
-            )
-            .setCustomId(`build-${item.id}`);
-          button.push(Btn);
-        }
-        const rows = [];
-        for (let i = 0; i < button.length; i += 5) {
-          const row = new ActionRowBuilder().addComponents(
-            button.slice(i, i + 5)
-          );
-          rows.push(row);
-        }
-        buildMessage.edit({
-          embeds: [buildEmbed],
-          components: rows,
-        });
-        return await m.deleteReply();
       }
+      const buildItems = await buildItemsDb.findAll({
+        where: { buildId: build.id },
+      });
+      const completedItems = buildItems.filter((i) => i.status == "completed");
+      const progress = (completedItems.length / buildItems.length) * 100;
+      const buildMessage = await m.channel.messages.fetch(build.message);
+      const buildEmbed = buildMessage.embeds[0];
+      const fieldLength = buildEmbed.fields.length;
+      buildEmbed.fields[fieldLength > 3 ? 3 : 2].value = `${progress.toFixed(
+        0
+      )}%`;
+      if (progress == 100) {
+        buildEmbed.data.color = 0x84e660;
+        buildEmbed.fields[fieldLength > 3 ? 2 : 1].value = "Completed";
+        build.status = "completed";
+        await build.save();
+      }
+      else{
+        buildEmbed.data.color = 0xffd700;
+        buildEmbed.fields[fieldLength > 3 ? 2 : 1].value = "Pending";
+        build.status = "pending";
+        await build.save();
+      }
+      const button = [];
+      for (let item of buildItems) {
+        const Btn = new ButtonBuilder()
+          .setEmoji(item.status == "completed" ? "✅" : "⬜")
+          .setLabel(item.item)
+          .setStyle(
+            item.status == "completed"
+              ? ButtonStyle.Success
+              : ButtonStyle.Secondary
+          )
+          .setCustomId(`build-${item.id}`);
+        button.push(Btn);
+      }
+      const rows = [];
+      for (let i = 0; i < button.length; i += 5) {
+        const row = new ActionRowBuilder().addComponents(
+          button.slice(i, i + 5)
+        );
+        rows.push(row);
+      }
+      await buildMessage.edit({
+        embeds: [buildEmbed],
+        components: rows,
+      });
+      return await m.deleteReply();
     } catch (e) {
       console.log(e);
       return await m.editReply("failed to complete item");
