@@ -142,7 +142,7 @@ Module(
     }
 
     buildMessage.edit({
-      content: `${m.user} suggestion created`,
+      content: `${m.user} build created`,
       embeds: [buildEmbed],
       components: rows,
     });
