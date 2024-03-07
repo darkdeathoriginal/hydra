@@ -206,6 +206,7 @@ onButton(
           embeds: [buildEmbed],
           components: rows,
         });
+        return await m.deleteReply();
       }
       if (item.status == "completed") {
         item.status = "pending";
@@ -251,6 +252,7 @@ onButton(
           embeds: [buildEmbed],
           components: rows,
         });
+        return await m.deleteReply();
       }
     } catch (e) {
       console.log(e);
