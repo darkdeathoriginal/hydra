@@ -57,7 +57,7 @@ Module(
         position: 0,
       });
       const playerchannel = await guild.channels.create({
-        name: "Online Players: " + details.online,
+        name: details.online,
         type: ChannelType.GuildVoice,
         parent: catogory.id,
         permissionOverwrites: [
@@ -78,7 +78,7 @@ Module(
         ],
       });
       const maxchannel = await guild.channels.create({
-        name: "Max Players: " + details.max,
+        name: details.max,
         type: ChannelType.GuildVoice,
         parent: catogory.id,
         permissionOverwrites: [
@@ -99,7 +99,7 @@ Module(
         ],
       });
       const versionchannel = await guild.channels.create({
-        name: "Version: " + details.version,
+        name: details.version,
         type: ChannelType.GuildVoice,
         parent: catogory.id,
         permissionOverwrites: [
@@ -177,12 +177,22 @@ onReady(
           const statusChannel = guild.channels.cache.get(server.statusChannel);
           try {
             const details = await queryServer(server.url, server.port);
-            playerchannel.setName("Online Players: " + details.online);
-            maxchannel.setName("Max Players: " + details.max);
-            versionchannel.setName("Version: " + details.version);
-            statusChannel.setName("Status: " + "Online");
+            if (playerchannel.name !== details.online) {
+              playerchannel.setName(details.online);
+            }
+            if (maxchannel.name !== details.max) {
+              maxchannel.setName(details.max);
+            }
+            if (versionchannel.name !== details.version) {
+              versionchannel.setName(details.version);
+            }
+            if (statusChannel.name !== "Status: " + "Online") {
+              statusChannel.setName("Status: " + "Online");
+            }
           } catch (error) {
-            statusChannel.setName("Status: " + "Offline");
+            if (statusChannel.name !== "Status: " + "Offline") {
+              statusChannel.setName("Status: " + "Offline");
+            }
           }
         }
       } catch (error) {
@@ -219,9 +229,9 @@ const queryServer = (serverAddress, serverPort) => {
         reject("Invalid server information received.");
       }
       resolve({
-        online: serverInfo[4],
-        max: serverInfo[5],
-        version: serverInfo[2],
+        online: "Online players: " + serverInfo[4],
+        max: "Max players: " + serverInfo[5],
+        version: "Version: " + serverInfo[2],
       });
     });
   });
